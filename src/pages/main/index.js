@@ -14,23 +14,23 @@ function Main() {
     }
 
     return (
-        <Layout>
+        <Layout style={{ height: '100vh' }}>
             <Sider>
                 <Menu
                     defaultSelectedKeys={[history.location.pathname]}
                     mode="inline"
                     onClick={clickMenu}
+                    style={{ height: '100%' }}
                 >
-                    <Menu.Item key="/dashboard">概览</Menu.Item>
+                    <Menu.Item key="/">概览</Menu.Item>
                     <Menu.Item key="/users">用户管理</Menu.Item>
                     <Menu.Item key="/settings">个人设置</Menu.Item>
                 </Menu>
             </Sider>
-            <Layout>
-                <Content>
+            <Layout style={{ padding: 24 }}>
+                <Content style={{ background: 'white', padding: 24 }}>
                     <Switch>
                         <Route path="/" component={Dashboard} exact />
-                        <Route path="/dashboard" component={Dashboard} exact />
                         <Route path="/users" component={Users} exact />
                         <Route path="/settings" component={Settings} exact />
                     </Switch>
