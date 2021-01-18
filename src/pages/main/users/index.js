@@ -1,79 +1,53 @@
-import { Table, Tag, Space } from 'antd';
+import { Table, Button } from 'antd';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import UserModal from './UserModal';
 
 function Users() {
+    const [users, setUsers] = useState();
+    const [id, setId] = useState();
+
+    useEffect(() => {
+        if (users === undefined) {
+            getUsers();
+        }
+    });
+
+    function getUsers() {
+        axios.get('http://127.0.0.1:8000/users').then(function (response) {
+            setUsers(response.data);
+        });
+    }
+
     const columns = [
         {
-            title: 'Name',
+            title: '姓名',
             dataIndex: 'name',
-            key: 'name',
-            render: (text) => <a>{text}</a>,
         },
         {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
+            title: '性别',
+            dataIndex: 'sex',
         },
         {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: '描述',
+            dataIndex: 'desc',
         },
         {
-            title: 'Tags',
-            key: 'tags',
-            dataIndex: 'tags',
-            render: (tags) => (
-                <>
-                    {tags.map((tag) => {
-                        let color = tag.length > 5 ? 'geekblue' : 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag}>
-                                {tag.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </>
-            ),
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <Space size="middle">
-                    <a>Invite {record.name}</a>
-                    <a>Delete</a>
-                </Space>
-            ),
+            title: '操作',
+            render: (text, record) => {
+                return <Button onClick={() => setId(record.id)}>编辑</Button>;
+            },
         },
     ];
 
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
-    return <Table columns={columns} dataSource={data} />;
+    return (
+        <>
+            <Table rowKey="id" columns={columns} dataSource={users} />
+            {id !== undefined && (
+                <UserModal id={id} getUsers={getUsers} setId={setId} />
+            )}
+        </>
+    );
 }
 
 export default Users;
