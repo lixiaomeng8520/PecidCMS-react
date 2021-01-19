@@ -6,7 +6,9 @@ function UserModal({ id, getUsers, setId }) {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        getUser();
+        if (id !== null) {
+            getUser();
+        }
     });
 
     function getUser() {
@@ -17,13 +19,24 @@ function UserModal({ id, getUsers, setId }) {
 
     function submit() {
         const values = form.getFieldsValue();
-        axios
-            .post('http://127.0.0.1:8000/user/' + id, values)
-            .then(function (response) {
-                console.log(response);
-                getUsers();
-                setId(undefined);
-            });
+
+        if (id === null) {
+            axios
+                .post('http://127.0.0.1:8000/user/add', values)
+                .then(function (response) {
+                    console.log(response);
+                    getUsers();
+                    setId(undefined);
+                });
+        } else {
+            axios
+                .post('http://127.0.0.1:8000/user/edit/' + id, values)
+                .then(function (response) {
+                    console.log(response);
+                    getUsers();
+                    setId(undefined);
+                });
+        }
     }
 
     return (
@@ -33,6 +46,7 @@ function UserModal({ id, getUsers, setId }) {
             okText="确定"
             cancelText="取消"
             onOk={submit}
+            onCancel={() => setId(undefined)}
         >
             <Form form={form}>
                 <Form.Item label="姓名" name="name">
