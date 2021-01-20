@@ -2,6 +2,7 @@ import { Table, Button, Space, Popconfirm } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import UserModal from './UserModal';
+import { get } from '../../../apis';
 
 function Users() {
     const [users, setUsers] = useState();
@@ -14,13 +15,20 @@ function Users() {
     });
 
     function getUsers() {
-        axios.get('http://127.0.0.1:8000/users').then(function (response) {
-            setUsers(response.data);
+        // axios.get('http://127.0.0.1:8000/users').then(function (response) {
+        //     setUsers(response.data);
+        // });
+        get('http://127.0.0.1:8000/users', {}, function (data) {
+            setUsers(data.data);
         });
     }
 
-    function deleteUser() {
-        axios.delete();
+    function deleteUser(id) {
+        axios
+            .post('http://127.0.0.1:8000/user/delete', { id })
+            .then(function (response) {
+                getUsers();
+            });
     }
 
     const columns = [
@@ -44,7 +52,7 @@ function Users() {
                         <Button onClick={() => setId(record.id)}>编辑</Button>
                         <Popconfirm
                             title="确定删除吗?"
-                            onConfirm={deleteUser}
+                            onConfirm={() => deleteUser(record.id)}
                             okText="确定"
                             cancelText="取消"
                         >

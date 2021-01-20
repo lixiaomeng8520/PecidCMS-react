@@ -1,6 +1,6 @@
 import { Modal, Form, Input, Radio } from 'antd';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { get, post } from '../../../apis';
 
 function UserModal({ id, getUsers, setId }) {
     const [form] = Form.useForm();
@@ -12,37 +12,34 @@ function UserModal({ id, getUsers, setId }) {
     });
 
     function getUser() {
-        axios.get('http://127.0.0.1:8000/user/' + id).then(function (response) {
-            form.setFieldsValue(response.data);
+        get('http://127.0.0.1:8000/user/' + id, {}, function (data) {
+            form.setFieldsValue(data.data);
         });
     }
 
     function submit() {
         const values = form.getFieldsValue();
 
+        let url = '';
         if (id === null) {
-            axios
-                .post('http://127.0.0.1:8000/user/add', values)
-                .then(function (response) {
-                    console.log(response);
-                    getUsers();
-                    setId(undefined);
-                });
+            url = 'http://127.0.0.1:8000/user/add';
         } else {
-            axios
-                .post('http://127.0.0.1:8000/user/edit/' + id, values)
-                .then(function (response) {
-                    console.log(response);
-                    getUsers();
-                    setId(undefined);
-                });
+            url = 'http://127.0.0.1:8000/user/edit';
+            values.id = id;
         }
+
+        post(url, values, function (data) {
+            if (data.code === 0) {
+                setId(undefined);
+                getUsers();
+            }
+        });
     }
 
     return (
         <Modal
             visible={true}
-            title="编辑用户"
+            title="用户表单"
             okText="确定"
             cancelText="取消"
             onOk={submit}
