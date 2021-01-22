@@ -29,7 +29,7 @@ function UserModal({ id, getUsers, setId }) {
         }
 
         post(url, values, function (data) {
-            if (data.code === 0) {
+            if (data.code === 1) {
                 setId(undefined);
                 getUsers();
             }
@@ -45,8 +45,23 @@ function UserModal({ id, getUsers, setId }) {
             onOk={submit}
             onCancel={() => setId(undefined)}
         >
-            <Form form={form}>
-                <Form.Item label="姓名" name="name">
+            <Form
+                form={form}
+                initialValues={{
+                    username: '',
+                    password: '',
+                    nickname: '',
+                    sex: 0,
+                    desc: '',
+                }}
+            >
+                <Form.Item label="用户名" name="username">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="密码" name="password">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="昵称" name="nickname">
                     <Input />
                 </Form.Item>
                 <Form.Item label="性别" name="sex">

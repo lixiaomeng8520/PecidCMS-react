@@ -8,8 +8,8 @@ function api(method, url, data, callback) {
         data,
     })
         .then(function (response) {
-            if (response.data.code !== 0) {
-                message.error(response.data.message);
+            if (response.data.code === 0) {
+                message.error(response.data.msg);
             }
             callback !== undefined && callback(response.data);
         })

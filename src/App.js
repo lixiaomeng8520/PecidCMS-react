@@ -1,9 +1,8 @@
 import Main from './pages/main';
+import { connect } from 'react-redux';
 
 function App() {
-    return (
-        <Main></Main>
-    );
+    return <Main></Main>;
 }
 
-export default App;
+export default connect()(App);
