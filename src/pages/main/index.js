@@ -1,16 +1,29 @@
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu } from 'antd';
 import { Switch, Route, useHistory } from 'react-router-dom';
-import Dashboard from './dashboard';
-import Users from './users';
-import Settings from './settings';
+import Dashboard from './Dashboard';
+import Users from './Users';
+import Settings from './Settings';
+import { connect } from 'react-redux';
+import { useEffect } from 'react';
 
 const { Sider, Content } = Layout;
 
-function Main() {
+function Main(props) {
     const history = useHistory();
+
+    useEffect(function () {
+        console.log(props);
+        if (props.token === '') {
+            history.push('/login');
+        }
+    });
+
     function clickMenu(e) {
-        console.log(e, history);
         history.push(e.key);
+    }
+
+    function logout() {
+        props.setToken('');
     }
 
     return (
@@ -28,6 +41,9 @@ function Main() {
                 </Menu>
             </Sider>
             <Layout style={{ padding: 24 }}>
+                <Button type="primary" onClick={logout}>
+                    登出
+                </Button>
                 <Content style={{ background: 'white', padding: 24 }}>
                     <Switch>
                         <Route path="/" component={Dashboard} exact />
@@ -40,4 +56,19 @@ function Main() {
     );
 }
 
-export default Main;
+function mapStateToProps(state) {
+    return state;
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        setToken: function (token) {
+            dispatch({
+                type: 'SET_TOKEN',
+                payload: token,
+            });
+        },
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

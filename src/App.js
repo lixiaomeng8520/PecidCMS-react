@@ -1,8 +1,14 @@
-import Main from './pages/main';
-import { connect } from 'react-redux';
+import Main from './pages/Main';
+import Login from './pages/Login';
+import { Switch, Route } from 'react-router-dom';
 
 function App() {
-    return <Main></Main>;
+    return (
+        <Switch>
+            <Route path="/login" component={Login} exact></Route>
+            <Route path="/" component={Main} exact></Route>
+        </Switch>
+    );
 }
 
-export default connect()(App);
+export default App;
