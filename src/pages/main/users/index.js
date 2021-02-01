@@ -18,7 +18,7 @@ function Users() {
         // axios.get('http://127.0.0.1:8000/users').then(function (response) {
         //     setUsers(response.data);
         // });
-        get('http://127.0.0.1:8000/users', {}, function (data) {
+        get('http://127.0.0.1:8000/api/users', {}, function (data) {
             setUsers(data.data);
         });
     }
