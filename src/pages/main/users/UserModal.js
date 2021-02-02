@@ -1,8 +1,10 @@
 import { Modal, Form, Input, Radio } from 'antd';
 import { useEffect } from 'react';
 import { get, post } from '../../../apis';
+import { useHistory } from 'react-router-dom';
 
 function UserModal({ id, getUsers, setId }) {
+    const history = useHistory();
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -12,9 +14,14 @@ function UserModal({ id, getUsers, setId }) {
     });
 
     function getUser() {
-        get('http://127.0.0.1:8000/user/' + id, {}, function (data) {
-            form.setFieldsValue(data.data);
-        });
+        get(
+            'http://127.0.0.1:8000/api/user/' + id,
+            {},
+            function (code, msg, data) {
+                form.setFieldsValue(data);
+            },
+            history
+        );
     }
 
     function submit() {
@@ -22,18 +29,23 @@ function UserModal({ id, getUsers, setId }) {
 
         let url = '';
         if (id === null) {
-            url = 'http://127.0.0.1:8000/user/add';
+            url = 'http://127.0.0.1:8000/api/user/add';
         } else {
-            url = 'http://127.0.0.1:8000/user/edit';
+            url = 'http://127.0.0.1:8000/api/user/edit';
             values.id = id;
         }
 
-        post(url, values, function (data) {
-            if (data.code === 1) {
-                setId(undefined);
-                getUsers();
-            }
-        });
+        post(
+            url,
+            values,
+            function (code, msg, data) {
+                if (code === 1) {
+                    setId(undefined);
+                    getUsers();
+                }
+            },
+            history
+        );
     }
 
     return (

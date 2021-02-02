@@ -9,15 +9,20 @@ const useTokenState = createPersistedState('token');
 
 function Login() {
     const history = useHistory();
-    const [, setToken] = useTokenState('');
+    const [, setToken] = useTokenState();
 
     function onFinish(values) {
-        post('http://127.0.0.1:8000/api/login', values, function (data) {
-            if (data.code === 1) {
-                setToken(data.data.token);
-                history.push('/');
-            }
-        });
+        post(
+            'http://127.0.0.1:8000/api/login',
+            values,
+            function (code, msg, data) {
+                if (code === 1) {
+                    setToken(data.token);
+                    history.push('/');
+                }
+            },
+            history
+        );
     }
 
     return (

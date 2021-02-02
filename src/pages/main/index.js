@@ -101,11 +101,11 @@ const mapDispatchToProps = {
             get(
                 'http://127.0.0.1:8000/api/my',
                 {},
-                function (response) {
-                    if (response.code === 1) {
+                function (code, msg, data) {
+                    if (code === 1) {
                         dispatch({
                             type: 'SET_MY',
-                            payload: response.data,
+                            payload: data,
                         });
                     }
                 },

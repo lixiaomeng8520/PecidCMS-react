@@ -2,9 +2,11 @@ import { Table, Button, Space, Popconfirm } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import UserModal from './UserModal';
-import { get } from '../../../apis';
+import { get, post } from '../../../apis';
+import { useHistory } from 'react-router-dom';
 
 function Users() {
+    const history = useHistory();
     const [users, setUsers] = useState();
     const [id, setId] = useState();
 
@@ -15,20 +17,25 @@ function Users() {
     });
 
     function getUsers() {
-        // axios.get('http://127.0.0.1:8000/users').then(function (response) {
-        //     setUsers(response.data);
-        // });
-        get('http://127.0.0.1:8000/api/users', {}, function (data) {
-            setUsers(data.data);
-        });
+        get(
+            'http://127.0.0.1:8000/api/users',
+            {},
+            function (code, msg, data) {
+                setUsers(data);
+            },
+            history
+        );
     }
 
     function deleteUser(id) {
-        axios
-            .post('http://127.0.0.1:8000/user/delete', { id })
-            .then(function (response) {
+        post(
+            'http://127.0.0.1:8000/api/user/delete',
+            { id },
+            function (code, msg, data) {
                 getUsers();
-            });
+            },
+            history
+        );
     }
 
     const columns = [

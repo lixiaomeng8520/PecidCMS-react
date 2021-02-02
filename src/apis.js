@@ -22,7 +22,12 @@ function api(method, url, data, callback, history) {
                 history.push('/login');
                 return;
             }
-            callback !== undefined && callback(response.data);
+            callback !== undefined &&
+                callback(
+                    response.data.code,
+                    response.data.msg,
+                    response.data.data
+                );
         })
         .catch(function (error) {});
 }
